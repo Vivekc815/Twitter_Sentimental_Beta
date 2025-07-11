@@ -1,0 +1,21 @@
+tweet_text,sentiment
+"I love this new feature! It's absolutely amazing! 😍",positive
+"This is the worst experience I've ever had. Terrible service!",negative
+"The weather is okay today, nothing special.",neutral
+"Can't believe how awesome this product is! Best purchase ever!",positive
+"I'm so disappointed with the quality. Not worth the money at all.",negative
+"This movie was incredible! Must watch!",positive
+"The food was disgusting and cold.",negative
+"The meeting went as expected.",neutral
+"Amazing customer service! Thank you so much!",positive
+"This app is completely useless and broken.",negative
+"Great job on the presentation!",positive
+"The delivery was late but the product is fine.",neutral
+"Fantastic experience overall!",positive
+"This is a complete waste of time.",negative
+"The concert was okay, nothing spectacular.",neutral
+"Love the new design! Beautiful work!",positive
+"Hate this new update, everything is broken!",negative
+"The book was interesting but not great.",neutral
+"Outstanding performance by the team!",positive
+"This is the worst decision ever made.",negative 
