@@ -182,7 +182,7 @@ export function enhancedSentimentAnalysis(text: string): SentimentResult {
   let overallScore = 0;
   let totalSentences = sentences.length;
   
-  sentences.forEach(sentence => {
+  sentences.forEach((sentence: string) => {
     const result = analyzeSentiment(sentence);
     overallScore += result.score;
   });
