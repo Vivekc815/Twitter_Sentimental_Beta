@@ -13,12 +13,21 @@ export default function Home() {
     setResult(null);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${apiUrl}/predict`, {
+      const apiUrl = 'https://web-production-9c93a.up.railway.app';
+      const fullUrl = `${apiUrl}/predict`;
+      console.log('🔗 Connecting to API at:', apiUrl); // Debug log
+      console.log('🔗 Full URL:', fullUrl); // Debug log
+      
+      const response = await fetch(fullUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: tweet }),
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       setResult({ 
         sentiment: data.sentiment, 
@@ -26,10 +35,11 @@ export default function Home() {
         message: data.message 
       });
     } catch (error) {
+      console.error('❌ API Error:', error); // Debug log
       setResult({ 
         sentiment: 'error', 
         confidence: 0,
-        message: 'Failed to connect to the sentiment analysis server. Make sure the FastAPI server is running on port 8000.'
+        message: `Failed to connect to the sentiment analysis server. Error: ${error instanceof Error ? error.message : 'Unknown error'}`
       });
     } finally {
       setIsAnalyzing(false);
