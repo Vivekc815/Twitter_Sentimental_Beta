@@ -1,0 +1,10 @@
+# Don't ignore ML model files
+!ml_model/
+!ml_model/*.joblib
+
+# Ignore development files
+node_modules/
+.git/
+.env.local
+*.log
+.DS_Store 

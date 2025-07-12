@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import joblib
 import os
 
-app = FastAPI()
+app = FastAPI(title="Tweet Sentiment Analyzer API", version="1.0.0")
 
 # Add CORS middleware
 app.add_middleware(
@@ -21,12 +21,20 @@ vectorizer_path = 'ml_model/vectorizer.joblib'
 
 if os.path.exists(model_path) and os.path.exists(vectorizer_path):
     # Load model and vectorizer
-    clf = joblib.load(model_path)
-    vectorizer = joblib.load(vectorizer_path)
-    model_loaded = True
+    try:
+        clf = joblib.load(model_path)
+        vectorizer = joblib.load(vectorizer_path)
+        model_loaded = True
+        print("✅ Model and vectorizer loaded successfully!")
+    except Exception as e:
+        model_loaded = False
+        print(f"❌ Error loading model: {str(e)}")
 else:
     model_loaded = False
-    print("Warning: Model files not found. Please run the training script first.")
+    print(f"❌ Model files not found at:")
+    print(f"   Model: {model_path} - Exists: {os.path.exists(model_path)}")
+    print(f"   Vectorizer: {vectorizer_path} - Exists: {os.path.exists(vectorizer_path)}")
+    print("Please ensure model files are included in deployment.")
 
 class TweetRequest(BaseModel):
     text: str
@@ -62,6 +70,7 @@ def root():
         "model_loaded": model_loaded,
         "endpoints": {
             "predict": "POST /predict - Analyze tweet sentiment",
+            "health": "GET /health - Health check",
             "docs": "GET /docs - API documentation"
         }
     }
@@ -70,9 +79,11 @@ def root():
 def health_check():
     return {
         "status": "healthy",
-        "model_loaded": model_loaded
+        "model_loaded": model_loaded,
+        "timestamp": "2024-01-01T00:00:00Z"
     }
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port) 
