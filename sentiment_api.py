@@ -3,6 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import os
+import sys
+
+# Print startup information
+print("🚀 Starting Tweet Sentiment Analyzer API...")
+print(f"📁 Current working directory: {os.getcwd()}")
+print(f"📁 Directory contents: {os.listdir('.')}")
 
 app = FastAPI(title="Tweet Sentiment Analyzer API", version="1.0.0")
 
@@ -19,9 +25,14 @@ app.add_middleware(
 model_path = 'ml_model/sentiment_model.joblib'
 vectorizer_path = 'ml_model/vectorizer.joblib'
 
+print(f"🔍 Checking for model files...")
+print(f"   Model path: {model_path}")
+print(f"   Vectorizer path: {vectorizer_path}")
+
 if os.path.exists(model_path) and os.path.exists(vectorizer_path):
     # Load model and vectorizer
     try:
+        print("📦 Loading model and vectorizer...")
         clf = joblib.load(model_path)
         vectorizer = joblib.load(vectorizer_path)
         model_loaded = True
@@ -29,12 +40,18 @@ if os.path.exists(model_path) and os.path.exists(vectorizer_path):
     except Exception as e:
         model_loaded = False
         print(f"❌ Error loading model: {str(e)}")
+        print(f"❌ Error type: {type(e)}")
 else:
     model_loaded = False
-    print(f"❌ Model files not found at:")
-    print(f"   Model: {model_path} - Exists: {os.path.exists(model_path)}")
-    print(f"   Vectorizer: {vectorizer_path} - Exists: {os.path.exists(vectorizer_path)}")
-    print("Please ensure model files are included in deployment.")
+    print(f"❌ Model files not found!")
+    print(f"   Model exists: {os.path.exists(model_path)}")
+    print(f"   Vectorizer exists: {os.path.exists(vectorizer_path)}")
+    
+    # Check if ml_model directory exists
+    if os.path.exists('ml_model'):
+        print(f"📁 ml_model directory contents: {os.listdir('ml_model')}")
+    else:
+        print("📁 ml_model directory does not exist!")
 
 class TweetRequest(BaseModel):
     text: str
@@ -85,5 +102,14 @@ def health_check():
 
 if __name__ == "__main__":
     import uvicorn
+    
+    # Get port from environment variable
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port) 
+    print(f"🌐 Starting server on port {port}")
+    print(f"🔧 Environment variables: PORT={os.getenv('PORT', '8000')}")
+    
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+    except Exception as e:
+        print(f"❌ Failed to start server: {str(e)}")
+        sys.exit(1) 
