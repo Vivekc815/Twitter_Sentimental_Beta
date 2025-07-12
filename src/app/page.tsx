@@ -13,7 +13,8 @@ export default function Home() {
     setResult(null);
 
     try {
-      const apiUrl = 'https://web-production-9c93a.up.railway.app';
+      // Use environment variable for production, localhost for development
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       const fullUrl = `${apiUrl}/predict`;
       console.log('🔗 Connecting to API at:', apiUrl); // Debug log
       console.log('🔗 Full URL:', fullUrl); // Debug log
